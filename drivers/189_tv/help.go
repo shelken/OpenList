@@ -72,6 +72,8 @@ func (t *Time) UnmarshalXML(e *xml.Decoder, ee xml.StartElement) error {
 }
 func (t *Time) Unmarshal(b []byte) error {
 	bs := strings.Trim(string(b), "\"")
+	// 189 时间串里 AM/PM 前可能使用 U+202F 窄不换行空格，统一替换为普通空格
+	bs = strings.ReplaceAll(bs, "\u202f", " ")
 	var v time.Time
 	var err error
 	// 189 返回的时间可能自带时区（如 "Aug 11, 2026, 10:37:18 PM +08"），也可能不带，分别尝试
